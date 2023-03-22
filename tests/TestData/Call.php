@@ -58,3 +58,24 @@ class TestCallVariadic {
         $this->data = $data;
     }
 }
+
+interface CallInterfaceA {
+	public function callMeA($val);
+}
+
+interface CallInterfaceB {
+	public function callMeB($val);
+}
+
+class TestCallMultipleInterfaces implements CallInterfaceA, CallInterfaceB {
+	public $a;
+	public $b;
+
+	public function callMeA($val) {
+		$this->a = $val;
+	}
+
+	public function callMeB($val) {
+		$this->b = $val;
+	}
+}

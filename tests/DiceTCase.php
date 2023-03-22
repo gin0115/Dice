@@ -4,11 +4,11 @@
  * @copyright 2012-2018 Tom Butler <tom@r.je> | https:// r.je/dice.html *
  * @license http:// www.opensource.org/licenses/bsd-license.php BSD License *
  * @version 3.0 */
-abstract class DiceTest extends \PHPUnit\Framework\TestCase {
+class DiceTCase extends \PHPUnit\Framework\TestCase {
 	protected $dice;
 
-	public function __construct() {
-		parent::__construct();
+	public function __construct(...$a) {
+		parent::__construct(...$a);
 	//	spl_autoload_register(array($this, 'autoload'));
 
 		//Load the test classes for this test

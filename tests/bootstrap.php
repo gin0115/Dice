@@ -5,4 +5,4 @@
  * @license http:// www.opensource.org/licenses/bsd-license.php BSD License *
  * @version 3.0 */
 require_once 'Dice.php';
-require_once 'tests/DiceTest.php';
+require_once 'tests/DiceTCase.php';

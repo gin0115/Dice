@@ -4,22 +4,20 @@
     "license": "BSD-2-Clause",
     "homepage": "http://r.je/dice.html",
     "keywords": ["Dependency injection", "ioc", "Dependency injection container", "DI"],
-    "authors": [
-    	{
-    		"name": "Tom Butler",
-    		"email": "tom@r.je"
-    	}
-    ],
+    "authors": [{
+        "name": "Tom Butler",
+        "email": "tom@r.je"
+    }],
     "require": {
-        "php": ">=7.0.0"
+        "php": ">=7.1.0"
     },
     "autoload": {
-    	"psr-4": {
+        "psr-4": {
             "Dice\\": "./"
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "*"
     },
     "scripts": {
         "test": "phpunit"
