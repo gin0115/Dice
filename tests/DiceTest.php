@@ -7,8 +7,8 @@
 abstract class DiceTest extends \PHPUnit\Framework\TestCase {
 	protected $dice;
 
-	public function __construct() {
-		parent::__construct();
+	public function __construct(...$a) {
+		parent::__construct(...$a);
 	//	spl_autoload_register(array($this, 'autoload'));
 
 		//Load the test classes for this test
