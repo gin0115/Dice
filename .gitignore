@@ -1,3 +1,4 @@
 vendor/
 composer.lock
 Dice.code-workspace
+.phpunit.result.cache
