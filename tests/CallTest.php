@@ -90,7 +90,29 @@ class CallTest extends DiceTest {
 
         $dice = $this->dice->addRules($rules);
         $object = $dice->create('TestCallVariadic', [], [new F()]);
-
         $this->assertEquals(['test1'], $object->data);
     }
+
+	/** @testdox It should be possible for a class to have multiple interfaces which implement a call rule */
+	public function testMultipleInterfacesWithCalls() {
+
+		$rules = [
+			'CallInterfaceA' => [
+				'call' => [
+					['callMeA', ['A']]
+				]
+			],
+			'CallInterfaceB' => [
+				'call' => [
+					['callMeB', ['B']]
+				]
+			]
+		];
+
+		$dice = $this->dice->addRules($rules);
+		$object = $dice->create('TestCallMultipleInterfaces');
+
+		$this->assertEquals('A', $object->a);
+		$this->assertEquals('B', $object->b);
+	}
 }

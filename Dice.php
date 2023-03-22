@@ -5,6 +5,7 @@
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  * @version 4.0 */
 namespace Dice;
+
 class Dice {
 	const CONSTANT = 'Dice::CONSTANT';
 	const GLOBAL = 'Dice::GLOBAL';
@@ -67,15 +68,57 @@ class Dice {
 		$lcName = strtolower(ltrim($name, '\\'));
 		if (isset($this->rules[$lcName])) return $this->rules[$lcName];
 
+		$rules = [];
 		foreach ($this->rules as $key => $rule) { 							// Find a rule which matches the class described in $name where:
 			if (empty($rule['instanceOf']) 		 							// It's not a named instance, the rule is applied to a class name
 				&& $key !== '*' 				 							// It's not the default rule
 				&& is_subclass_of($name, $key)								// The rule is applied to a parent class
 				&& (!array_key_exists('inherit', $rule) || $rule['inherit'] === true )) // And that rule should be inherited to subclasses
-			return $rule;
+			
+			$rules[] = $rule;
 		}
+
+		// If we have rules, return as dynamic rule
+		if (count($rules) > 0) return $this->getDynamicRule($rules);
+		
 		// No rule has matched, return the default rule if it's set
 		return isset($this->rules['*']) ? $this->rules['*'] : [];
+	}
+
+	/**
+	 * Potentially chains multiple calls to the same object
+	 * @param array $rules The rules for the object
+	 * @return array The dynamic rule to be used for the object
+	 */
+	private function getDynamicRule(array $rules): array {
+		// If we only have 1 rule, just return.
+		if (count($rules) === 1) return $rules[0];
+
+		// Iterate through rules and extract the call method and parameters
+		$calls = [];
+		foreach ($rules as $rule) {
+			// If rule has a call method, add it to the call array
+			// if (isset($rule['call'])) $calls[] = $rule['call'];
+			if (isset($rule['call'])) $calls = array_merge($calls, $rule['call']);
+		}
+
+		// If we have no calls, return the first rule
+		if (count($calls) === 0) return $rules[0];
+
+		// If we have 1 call, add to rule and return
+		if (count($calls) === 1) {
+			$rules[0]['call'] = $calls[0];
+			return $rules[0];
+		}
+
+		// If we have multiple calls, merge them into a single call array
+		if(count($calls) > 1) {
+			$rules[0]['call'] = $calls;
+			return $rules[0];
+		}
+
+		// Else return the first rule
+		return $rules[0];
 	}
 
 	/**
@@ -109,6 +152,7 @@ class Dice {
 
 		// Create parameter generating function in order to cache reflection on the parameters. This way $reflect->getParameters() only ever gets called once
 		$params = $constructor ? $this->getParams($constructor, $rule) : null;
+
 		//PHP throws a fatal error rather than an exception when trying to instantiate an interface, detect it and throw an exception instead
 		if ($class->isInterface()) $closure = function() {
 			throw new \InvalidArgumentException('Cannot instantiate interface');
@@ -224,7 +268,6 @@ class Dice {
 		return function (array $args, array $share = []) use ($paramInfo, $rule) {
 			// If the rule has construtParams set, construct any classes reference and use them as $args
 			if (isset($rule['constructParams'])) $args = array_merge($args, $this->expand($rule['constructParams'], $share));
-
 			// Array of matched parameters
 			$parameters = [];
 
@@ -244,7 +287,23 @@ class Dice {
 						$parameters[] = $this->expand($rule['substitutions'][$class], $share, true);
 					}
 					else {
-						$parameters[] = !$param->allowsNull() ? $this->create($class, [], $share) : null;
+						// If we have a typehint.
+						if($param->hasType() ){
+							// If we have a typehint that is nullable, and no default value, create a null value.
+							if($param->getType()->allowsNull() && !$param->isDefaultValueAvailable()){
+								$parameters[] = null;
+							}
+							// If we have a typehint that is not a scalar, create an instance.
+							elseif(!$param->getType()->isBuiltin()){
+								$parameters[] = $this->create($class, [], $share);
+							} else{
+								$parameters[] = null;
+							}
+		
+						}else{
+							$parameters[] = null;
+						}
+						
 					}
 				}
 				catch (\InvalidArgumentException $e) {
