@@ -7,6 +7,9 @@
 	"settings": {
 		"phpcs.enable": false,
 		"phpcbf.enable": false,
-		"phpcbf.onsave": true
+		"phpcbf.onsave": true,
+		"files.associations": {
+			"*.yaml": "home-assistant"
+		}
 	}
 }
