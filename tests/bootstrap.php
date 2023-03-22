@@ -6,4 +6,3 @@
  * @version 3.0 */
 require_once 'Dice.php';
 require_once 'tests/DiceTCase.php';
-// require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
