@@ -4,7 +4,7 @@
  * @copyright 2012-2018 Tom Butler <tom@r.je> | https:// r.je/dice.html *
  * @license http:// www.opensource.org/licenses/bsd-license.php BSD License *
  * @version 3.0 */
-class SubstitutionsTest extends DiceTest {
+class SubstitutionsTest extends DiceTCase {
 	public function testNoMoreAssign() {
 		$rule = [];
 		$rule['substitutions']['Bar77'] = [\Dice\Dice::INSTANCE => function() {

@@ -4,7 +4,7 @@
  * @copyright 2012-2018 Tom Butler <tom@r.je> | https:// r.je/dice.html *
  * @license http:// www.opensource.org/licenses/bsd-license.php BSD License *
  * @version 3.0 */
-class DiceTest extends \PHPUnit\Framework\TestCase {
+class DiceTCase extends \PHPUnit\Framework\TestCase {
 	protected $dice;
 
 	public function __construct(...$a) {

@@ -8,7 +8,7 @@
 
 
 
-class BasicTest extends DiceTest {
+class BasicTest extends DiceTCase {
 
 	public function testCreate() {
 		$this->getMockBuilder('TestCreate')->getMock();
